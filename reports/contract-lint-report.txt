@@ -1,0 +1,10 @@
+> spectral lint contracts/*.yaml --fail-severity error
+
+c:/Users/MSI BRAVO/Downloads/cong/contracts/ai-vision.openapi.yaml
+ 2:6  warning  info-contact  Info object must have "contact" object.  info
+
+c:/Users/MSI BRAVO/Downloads/cong/contracts/iot-ingestion.openapi.yaml
+ 2:6  warning  info-contact  Info object must have "contact" object.  info
+
+✖ 2 problems (0 errors, 2 warnings, 0 infos, 0 hints)
+Lint check passed successfully with 0 errors.

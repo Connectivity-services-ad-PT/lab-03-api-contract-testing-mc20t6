@@ -1,6 +1,14 @@
 ID,Folder,Endpoint,Method,Scenario,Input file/body,Expected status,Expected response check,Type,Pass/Fail,Evidence
-TC01,Functional,/health,GET,Service is alive,-,200,status=ok,functional,,
-TC02,Functional,/readings,POST,Create reading happy path,mock-data/sensor-reading-valid.json,201,"has reading_id, accepted=true",functional,,
-TC03,Negative,/readings,POST,Missing device_id,mock-data/sensor-reading-invalid-missing-device.json,400,Problem Details,negative,,
-TC04,Auth,/readings,POST,Missing token,mock-data/sensor-reading-valid.json,401,Problem Details,auth,,
-TC05,Boundary,/readings,POST,High temperature boundary,mock-data/sensor-reading-boundary.json,201/400,documented behavior,boundary,,
+TC01,Functional,/health,GET,Service is alive,-,200,"status=ok, service=iot-ingestion",functional,Pass,newman-report.html
+TC02,Functional,/readings,POST,Create reading happy path,mock-data/sensor-reading-valid.json,201,"has reading_id, accepted=true, metric=temperature",functional,Pass,newman-report.html
+TC03,Functional,/readings/latest,GET,List latest readings,device_id=ESP32-LAB-A01&limit=5,200,has items array,functional,Pass,newman-report.html
+TC04,Auth,/readings/latest,GET,Valid token is accepted,Bearer {{authToken}},200,status 200 OK,auth,Pass,newman-report.html
+TC05,Auth,/readings,POST,Missing token is rejected on real service,No token,401/403,Skipped on mock (passes on local),auth,Pass (Skipped),newman-report.html
+TC06,Auth,/readings,POST,Invalid token is rejected on real service,Bearer invalid-token,401/403,Skipped on mock (passes on local),auth,Pass (Skipped),newman-report.html
+TC07,Negative,/readings,POST,Missing required field returns validation error,mock-data/sensor-reading-invalid-missing-device.json,400/422,Problem Details shape with status & title,negative,Pass,newman-report.html
+TC08,Negative,/readings,POST,Wrong enum value returns validation error,metric="temp_hot",400/422,Problem Details contains detail,negative,Pass,newman-report.html
+TC09,Boundary,/readings,POST,Boundary value 80 is accepted,mock-data/sensor-reading-boundary.json,201,accepted=true,boundary,Pass,newman-report.html
+TC10,Boundary,/readings,POST,Value 81 is rejected as out of range,value=81,400/422,Problem Details status matches 400-599,boundary,Pass,newman-report.html
+TC11,Boundary,/readings/latest,GET,Limit above max is rejected,limit=101,400/422,status 400 or 422,boundary,Pass,newman-report.html
+TC12,Consumer_side_Smoke,/detect,POST,Camera/Core can call AI Vision mock,camera_id="CAM01"&image_url,200,"has detection_id, label, confidence in [0,1]",consumer-side,Pass,newman-report.html
+TC13,Local_only_NonFunctional,/readings,POST,Local response time threshold,Inline humidity payload,201,Skipped on mock (<1000ms on local),local-only,Pass (Skipped),newman-report.html

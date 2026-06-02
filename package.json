@@ -19,5 +19,19 @@
     "newman": "^6.2.1",
     "newman-reporter-htmlextra": "^1.23.1",
     "wait-on": "^7.2.0"
+  },
+  "overrides": {
+    "@stoplight/prism-cli": {
+      "@faker-js/faker": "9.5.0"
+    },
+    "@stoplight/prism-http": {
+      "@faker-js/faker": "9.5.0"
+    },
+    "postman-collection": {
+      "@faker-js/faker": "5.5.3"
+    }
   }
 }
+
+
+
